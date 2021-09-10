@@ -2,18 +2,17 @@ from flask import Flask, request, session, jsonify, send_from_directory, redirec
 from flask.templating import render_template
 from markupsafe import escape
 from flask_cors import CORS
-import sqlite3
+import psycopg2
 import sys
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4sdffgQ8z\n\xec]/'
 CORS(app)
 
-con = sqlite3.connect('database.db')
-
 @app.route("/news")
 def news_list():
-    with sqlite3.connect("database.db") as con:
+    with psycopg2.connect(dbname='database', user='yanb', 
+            password='terrayan', host='localhost') as con:
         cur = con.cursor()
         cur.execute('SELECT creator, title, text, type, id FROM news;')
         #return jsonify(_news)
@@ -21,18 +20,21 @@ def news_list():
 
 @app.post("/addnews")
 def add_news():
-    with sqlite3.connect("database.db") as con:
+    with psycopg2.connect(dbname='database', user='yanb', 
+            password='terrayan', host='localhost') as con:
         cur = con.cursor()
-        cur.execute('INSERT INTO news (creator, title, text, type) VALUES (?, ?, ?, ?);', request.json)
+        cur.execute('INSERT INTO news (creator, title, text, type) VALUES (%s, %s, %s, %s);',
+                request.json)
         con.commit()
         #_news.append(request.json)
         return jsonify("OK")
 
 @app.route("/deletenews/<int:id>")
 def delete_news(id):
-    with sqlite3.connect("database.db") as con:
+    with psycopg2.connect(dbname='database', user='yanb', 
+            password='terrayan', host='localhost') as con:
         cur = con.cursor()
-        cur.execute('DELETE FROM news WHERE id = ?;', (id,))
+        cur.execute('DELETE FROM news WHERE id = %s;', (id,))
         con.commit()
         #_news.append(request.json)
         return jsonify("OK")
