@@ -68,4 +68,4 @@ def pages(path):
 def main_page():
     return redirect("/pages/login/index.html")
 
-app.run()
+#app.run()
