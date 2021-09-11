@@ -3,7 +3,7 @@ from flask.templating import render_template
 from markupsafe import escape
 from flask_cors import CORS
 import psycopg2
-import sys
+import os
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4sdffgQ8z\n\xec]/'
@@ -11,19 +11,17 @@ CORS(app)
 
 @app.route("/news")
 def news_list():
-    with psycopg2.connect(dbname='database', user='yanb', 
-            password='terrayan', host='localhost') as con:
+    with get_connection() as con:
         cur = con.cursor()
-        cur.execute('SELECT creator, title, text, type, id FROM news;')
+        cur.execute('SELECT creator, title, content, news_type, id FROM news;')
         #return jsonify(_news)
         return jsonify(cur.fetchall())
 
 @app.post("/addnews")
 def add_news():
-    with psycopg2.connect(dbname='database', user='yanb', 
-            password='terrayan', host='localhost') as con:
+    with get_connection() as con:
         cur = con.cursor()
-        cur.execute('INSERT INTO news (creator, title, text, type) VALUES (%s, %s, %s, %s);',
+        cur.execute('INSERT INTO news (creator, title, content, news_type) VALUES (%s, %s, %s, %s);',
                 request.json)
         con.commit()
         #_news.append(request.json)
@@ -31,8 +29,7 @@ def add_news():
 
 @app.route("/deletenews/<int:id>")
 def delete_news(id):
-    with psycopg2.connect(dbname='database', user='yanb', 
-            password='terrayan', host='localhost') as con:
+    with get_connection() as con:
         cur = con.cursor()
         cur.execute('DELETE FROM news WHERE id = %s;', (id,))
         con.commit()
@@ -41,13 +38,13 @@ def delete_news(id):
 
 @app.post("/login")
 def login():
-    if request.json[0] == "Пельмень" and request.json[1] == "п":
+    if request.json[0] == "Пельмень" and request.json[1] == "пельмень21":
         session['username'] = request.json[0]
         return jsonify("OK")
-    elif request.json[0] == "Бойстул" and request.json[1] == "б":
+    elif request.json[0] == "Бойстул" and request.json[1] == "байсалбайсогур":
         session['username'] = request.json[0]
         return jsonify("OK")
-    elif request.json[0] == "Ян" and request.json[1] == "я":
+    elif request.json[0] == "Ян" and request.json[1] == "terrayan1":
         session['username'] = request.json[0]
         return jsonify("OK")
     return jsonify("FAIL")
@@ -69,5 +66,12 @@ def pages(path):
 @app.route("/")
 def main_page():
     return redirect("/pages/login/index.html")
+
+def get_connection():
+    if os.environ.get("ENV") == 'prod':
+        # Heroku settings
+        return psycopg2.connect(dbname='pelmenovosti', user='pelmenovosti', password='pelmenovosti', host='localhost', port=5432)
+    # return connection to dev server
+    return psycopg2.connect(dbname='pelmenovosti', user='pelmenovosti', password='pelmenovosti', host='localhost', port=5432)
 
 #app.run()

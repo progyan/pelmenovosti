@@ -1,1 +1,1 @@
-web: gunicorn flask_app:app
+web: ENV=prod gunicorn flask_app:app
