@@ -71,9 +71,7 @@ def get_connection():
     if os.environ.get("ENV") == 'prod':
         # Heroku settings
         app.logger.debug("Database from Heroku")
-        return psycopg2.connect(dbname='df3np8aam20708', user='xxheddtkjfbgbk', 
-                password='6a8958ddac4956dc14227fe57213ab27be914f5a35f27d16806c9c559fa68029', 
-                host='ec2-3-248-103-75.eu-west-1.compute.amazonaws.com', port=5432)
+        return psycopg2.connect(os.environ["DATABASE_URL"])
     # return connection to dev server
     return psycopg2.connect(dbname='pelmenovosti', user='pelmenovosti', password='pelmenovosti', 
             host='localhost', port=5432)
