@@ -66,6 +66,11 @@ h3 {
 
 body {
     padding: 16px;
+    background-image: url(../icons/lonely.jpg);
+    background-size: 100vw;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-attachment: fixed;
 }
 
 .face {
