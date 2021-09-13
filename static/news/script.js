@@ -15,10 +15,12 @@ document.getElementById("face").src = "../faces/" + news[0] + ".jpg";
 function deleteNews() {
     confirm("Вы точно хотите порвать эту пельменовость на куски и сжечь?");
     fetch("/deletenews/" + news[4], {"mode": "no-cors"}).then((resp) => {
-        if (resp == "NO RIGHTS") {
-            alert("Это не твоя новость. Ты не можешь рвать чужое имущество. УК РФ Статья 167: Умышленное уничтожение или повреждение имущества.");
-        } else {
-            window.location.href = '../main/index.html';
-        }
+        resp.then((code) => {
+            if (code == "NO RIGHTS") {
+                alert("Это не твоя новость. Ты не можешь рвать чужое имущество. УК РФ Статья 167: Умышленное уничтожение или повреждение имущества.");
+            } else {
+                window.location.href = '../main/index.html';
+            }
+        });
     });
 }
