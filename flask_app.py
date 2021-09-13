@@ -19,13 +19,14 @@ def news_list():
 
 @app.post("/addnews")
 def add_news():
-    with get_connection() as con:
-        cur = con.cursor()
-        cur.execute('INSERT INTO news (creator, title, content, news_type) VALUES (%s, %s, %s, %s);',
-                request.json)
-        con.commit()
-        #_news.append(request.json)
-        return jsonify("OK")
+    if request.json[1] != "" and request.json[2] != "":
+        with get_connection() as con:
+            cur = con.cursor()
+            cur.execute('INSERT INTO news (creator, title, content, news_type) VALUES (%s, %s, %s, %s);',
+                    request.json)
+            con.commit()
+            #_news.append(request.json)
+            return jsonify("OK")
 
 @app.route("/deletenews/<int:id>")
 def delete_news(id):
