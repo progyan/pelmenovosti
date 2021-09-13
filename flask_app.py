@@ -31,10 +31,13 @@ def add_news():
 def delete_news(id):
     with get_connection() as con:
         cur = con.cursor()
-        cur.execute('DELETE FROM news WHERE id = %s;', (id,))
-        con.commit()
-        #_news.append(request.json)
-        return jsonify("OK")
+        cur.execute('SELECT creator FROM news where id = %s;', (id,))
+        if session["username"] == "Ян" or session["username"] == cur.fetchall():
+            cur.execute('DELETE FROM news WHERE id = %s;', (id,))
+            con.commit()
+            return jsonify("OK")
+        else:
+            return jsonify("NO RIGHTS")
 
 @app.post("/login")
 def login():
