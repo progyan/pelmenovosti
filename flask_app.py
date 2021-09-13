@@ -6,7 +6,7 @@ import psycopg2
 import os
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4sdffgQ8z\n\xec]/'
+app.secret_key = os.environ["SESSION_KEY"].encode()
 CORS(app)
 
 @app.route("/news")
@@ -44,7 +44,7 @@ def login():
     elif request.json[0] == "Бойстул" and request.json[1] == "байсалбайсогур":
         session['username'] = request.json[0]
         return jsonify("OK")
-    elif request.json[0] == "Ян" and request.json[1] == "terrayan1":
+    elif request.json[0] == "Ян" and request.json[1] == "terra8002":
         session['username'] = request.json[0]
         return jsonify("OK")
     return jsonify("FAIL")
