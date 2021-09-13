@@ -17,7 +17,8 @@ function deleteNews() {
     fetch("/deletenews/" + news[4], {"mode": "no-cors"}).then((resp) => {
         if (resp == "NO RIGHTS") {
             alert("Это не твоя новость. Ты не можешь рвать чужое имущество. УК РФ Статья 167: Умышленное уничтожение или повреждение имущества.");
+        } else {
+            window.location.href = '../main/index.html';
         }
     });
-    window.location.href = '../main/index.html';
 }
